@@ -104,6 +104,15 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
+          <configuration>
+            <assembleDirectory>target</assembleDirectory>
+            <programs>
+              <program>
+                <mainClass>org.example.Main</mainClass>
+                <name>telegrambotword</name>
+              </program>
+            </programs>
+          </configuration>
           <version>3.0.1</version>
           <executions>
             <execution>
