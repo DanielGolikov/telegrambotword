@@ -1,1 +1,1 @@
-worker: sh target/bin/telegrambotword
+worker: java -jar target/telegrambotword-1.0-SNAPSHOT.jar
