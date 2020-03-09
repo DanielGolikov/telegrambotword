@@ -1,1 +1,1 @@
-worker: java -jar target/telegrambotword-1.0-SNAPSHOT.jar
+worker: java -jar target/telegrambotword-1.0-SNAPSHOT.jar org.example.Bot
