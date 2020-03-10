@@ -26,6 +26,7 @@ public class Bot extends TelegramLongPollingBot {
 
     /**
      * Метод для приема сообщений.
+     *
      * @param update Содержит сообщение от пользователя.
      */
     @Override
@@ -37,47 +38,35 @@ public class Bot extends TelegramLongPollingBot {
 
     /**
      * Метод для настройки сообщения и его отправки.
+     *
      * @param chatId id чата
      * @param s Строка, которую необходимот отправить в качестве сообщения.
      */
 
     private static Logger log = LoggerFactory.getLogger(Bot.class);
+
     public synchronized void sendMsg(String chatId, String s) {
-
-
-
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         setButtons(sendMessage);
         try {
-            switch(s) {
+            switch (s) {
                 case "/start":
-                    sendMessage.setText("С 8 марта тебя, дорогая пуза.. \n" +
-                            "                            Самая лучшая и прекрасная...\n");
-                    SendPhoto message = new SendPhoto();
-                    message.setChatId(chatId);
-                    message.setPhoto("text",new FileInputStream(new File("image.jpg")));
-                    execute(message);
+                    sendMessage.setText("Бот включен");
                     break;
-                case "Пуза пуза!":
-                    sendMessage.setText("Карапуза!");
+                case "Привет":
+                    sendMessage.setText("Здравствуй!");
                     break;
-                case "Карапуза!":
-                    sendMessage.setText("Пуза пуза!");
-                    break;
-                case "Карабу!":
-                    sendMessage.setText("Бу!");
-                    break;
-                case "Бу!":
-                    sendMessage.setText("Карабу!");
+                case "Пока":
+                    sendMessage.setText("До свидания!");
                     break;
                 default:
-                    sendMessage.setText("Буууууууу!");
+                    sendMessage.setText("Повторите попытку");
             }
             execute(sendMessage);
             System.out.println(s);
-        } catch (TelegramApiException | FileNotFoundException e) {
+        } catch (TelegramApiException e) {
             log.error(String.valueOf(e));
         }
     }
@@ -106,26 +95,15 @@ public class Bot extends TelegramLongPollingBot {
         // Первая строчка клавиатуры
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton( "Карапуза!"));
-        KeyboardRow keyboardSecondRow = new KeyboardRow();
-        // Добавляем кнопки во вторую строчку клавиатуры
-        keyboardSecondRow.add(new KeyboardButton("Пуза пуза!"));
-        // Первая строчка клавиатуры
-        KeyboardRow keyboardThirdRow = new KeyboardRow();
-        // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton( "Карабу!"));
-        // Первая строчка клавиатуры
-        KeyboardRow keyboardFourthRow = new KeyboardRow();
-        // Добавляем кнопки в первую строчку клавиатуры
-        keyboardFirstRow.add(new KeyboardButton( "Бу!"));
-        // Вторая строчка клавиатуры
+        keyboardFirstRow.add(new KeyboardButton("Привет"));
 
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+
+        keyboardSecondRow.add(new KeyboardButton("Пока"));
 
         // Добавляем все строчки клавиатуры в список
         keyboard.add(keyboardFirstRow);
         keyboard.add(keyboardSecondRow);
-        keyboard.add(keyboardThirdRow);
-        keyboard.add(keyboardFourthRow);
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
     }
