@@ -65,7 +65,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMessage.setText("Повторите попытку");
             }
             execute(sendMessage);
-            System.out.println(s);
+            log.info(s);
         } catch (TelegramApiException e) {
             log.error(String.valueOf(e));
         }

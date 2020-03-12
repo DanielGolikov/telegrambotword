@@ -1,1 +1,1 @@
-web: java -jar target/telegrambotword-1.0-SNAPSHOT-shaded.jar org.example.Main -Dserver.port=$PORT
+worker: java -jar target/telegrambotword-1.0-SNAPSHOT-shaded.jar org.example.Main
