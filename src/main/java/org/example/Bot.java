@@ -73,12 +73,12 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return "WordsGeneratorBot";
+        return "Wish_joy_bot";
     }
 
     @Override
     public String getBotToken() {
-        return "1071585481:AAGweM7B5cfNBRXZ93bkmFl_wRmkeuQGcfY";
+        return "994116514:AAG1kLrKnK4QBAQnc5J6qGnnAgj0UWVlqN8";
     }
 
     public synchronized void setButtons(SendMessage sendMessage) {
