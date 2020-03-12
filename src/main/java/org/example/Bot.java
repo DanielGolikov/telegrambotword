@@ -44,7 +44,6 @@ public class Bot extends TelegramLongPollingBot {
      */
 
     private static Logger log = LoggerFactory.getLogger(Bot.class);
-
     public synchronized void sendMsg(String chatId, String s) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
