@@ -70,20 +70,8 @@ public class Bot extends TelegramLongPollingBot {
                 int length = Integer.parseInt(s.substring(0, 1));
                 String word = s.substring(2);
 
-                String text = playWordGame(word.toLowerCase(), length);
-
-                if (text.length() <= 400) {
-                    log.info(text);
-                    sendMessage.setText(text);
-                } else {
-                    log.debug("lenght " + text.length());
-                    int numberOftimesWeNeedDivideText = text.length() / 400;
-                    log.debug("numberOftimesWeNeedDivideText " + numberOftimesWeNeedDivideText);
-                    int m = text.length() / numberOftimesWeNeedDivideText;
-                    log.debug("int m " + m);
-                    sendMessage.setText(text.substring(0, m));
-                    sendMessage.setText(text.substring(m));
-                }
+                playWordGame(word.toLowerCase(), length);
+                sendMessage.setText(" !");
                 break;
         }
         try {

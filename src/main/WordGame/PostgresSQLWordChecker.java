@@ -8,7 +8,7 @@ class PostgresSQLWordChecker {
     private static String username = "postgres";
     private static String password = "password";
 
-    static String findAllWordsFromArray() {
+    static void findAllWordsFromArray() {
         Connection con;
         StringBuilder builder = new StringBuilder();
         try {
@@ -55,6 +55,7 @@ class PostgresSQLWordChecker {
         }
         String s = builder.toString();
         builder.setLength(0);
-        return s;
+        String[] args={s};
+        TextToGraphics.main(args);
     }
 }
