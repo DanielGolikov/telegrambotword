@@ -38,8 +38,7 @@ public class Bot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             sendMsg(update.getMessage().getChatId(), update.getMessage().getText());
-        }
-        else {
+        } else {
             sendMsg(update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getData());
         }
     }
@@ -52,27 +51,41 @@ public class Bot extends TelegramLongPollingBot {
      */
 
     private static Logger log = LoggerFactory.getLogger(Bot.class);
+
     private void sendMsg(Long chatId, String s) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
 
-         //   setButtons(sendMessage);
-            switch (s) {
-                case "/start":
-                    sendMessage.setText("Hello! \nI am wordbot. For playing in wordgame write necessary length for your words and word itself in one messege \n" +
-                            " For example: 5 apple");
-                    break;
-                case "I would like to play wordgame":
-                    sendMessage.setText("Alright! ");
-                    break;
-                default:
-                    Integer length = Integer.valueOf(s.substring(0,1));
-                    String word = s.substring(2);
-                    sendMessage.setText(playWordGame(word,length));
-                    break;
-            }
+        //   setButtons(sendMessage);
+        switch (s) {
+            case "/start":
+                sendMessage.setText("Hello! \nI am wordbot. To play wordgame write length for generated words and word itself in one message \n" +
+                        " For example: 5 apple");
+                break;
+            case "I would like to play wordgame":
+                sendMessage.setText("Alright! ");
+                break;
+            default:
+                int length = Integer.parseInt(s.substring(0, 1));
+                String word = s.substring(2);
 
+                String text = playWordGame(word.toLowerCase(), length);
+
+                if (text.length() <= 400) {
+                    log.info(text);
+                    sendMessage.setText(text);
+                } else {
+                    log.debug("lenght " + text.length());
+                    int numberOftimesWeNeedDivideText = text.length() / 400;
+                    log.debug("numberOftimesWeNeedDivideText " + numberOftimesWeNeedDivideText);
+                    int m = text.length() / numberOftimesWeNeedDivideText;
+                    log.debug("int m " + m);
+                    sendMessage.setText(text.substring(0, m));
+                    sendMessage.setText(text.substring(m));
+                }
+                break;
+        }
         try {
             execute(sendMessage);
             log.info(s);
@@ -112,6 +125,7 @@ public class Bot extends TelegramLongPollingBot {
         // и устанваливаем этот список нашей клавиатуре
         replyKeyboardMarkup.setKeyboard(keyboard);
     }
+
     private void setInline(SendMessage sendMessage) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
