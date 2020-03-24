@@ -15,7 +15,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static WordGame.WordGameConnector.playWordGame;
 
@@ -78,20 +79,22 @@ public class Bot extends TelegramLongPollingBot {
 
                     log.info("Размер "+Array.getLength(results));
 
+
+
+                    sendMessage.setText("I found "+ StringUtils.countMatches(result,";") + " words");
+                    execute(sendMessage);
+
                     for (int i=0;i< Array.getLength(results);i++){
                         log.info("Длина элемента "+i+" - "+results[i].length());
                         sendMessage.setText(results[i]);
                         execute(sendMessage);
                     }
 
-                    sendMessage.setText("Number of words: "+StringUtils.countMatches(result,";"));
-                    execute(sendMessage);
-
 
                     long finish = System.currentTimeMillis();
                     double timeConsumedMillis = finish - start;
                     log.info("Time consumed: " + timeConsumedMillis / 1000 + " sec");
-                    sendMessage.setText("Time consumed: " + timeConsumedMillis / 1000 + " secc");
+                    sendMessage.setText("Time consumed: " + timeConsumedMillis / 1000 + " sec");
                     execute(sendMessage);
 
 
