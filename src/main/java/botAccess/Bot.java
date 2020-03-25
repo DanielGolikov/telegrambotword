@@ -64,10 +64,6 @@ public class Bot extends TelegramLongPollingBot {
                 int length = Integer.parseInt(s.substring(0, 1));
                 executeSearch(chatId, word, length);
             } else if (s.length() < 15) {
-                word = s;
-                setInline(sendMessage);
-                sendMessage.setText(s.toLowerCase());
-                execute(sendMessage);
                 if (s.matches("^[a-zA-Z0-9]+$")) {
                     word = s;
                     setInline(sendMessage);
