@@ -22,13 +22,7 @@ import static WordGame.WordGameConnector.playWordGame;
 
 
 public class Bot extends TelegramLongPollingBot {
-
-    private boolean enableGame;
     private String word;
-
-    public Bot() {
-    }
-
 
     /**
      * Метод для приема сообщений.
@@ -60,45 +54,33 @@ public class Bot extends TelegramLongPollingBot {
 
         //   setButtons(sendMessage);
         try {
-            switch (s) {
-                case "/start":
-                    sendMessage.setText("Hello! \nI am wordbot. For playing in wordgame write necessary length for your words and word itself in one messege \n" +
-                            " For example: 3 liberation");
+            if ("/start".equals(s)) {
+                sendMessage.setText("Hello! \nI am wordbot. For playing in Wordgame write word(max 14 letters)  \n" +
+                        " For example: liberation");
+                execute(sendMessage);
+            } else if (s.contains("%")) {
+                sendMessage.setText("working on it...");
+                execute(sendMessage);
+                int length = Integer.parseInt(s.substring(0, 1));
+                executeSearch(chatId, word, length);
+            } else if (s.length() < 15) {
+                word = s;
+                setInline(sendMessage);
+                sendMessage.setText(s.toLowerCase());
+                execute(sendMessage);
+                if (s.matches("^[a-zA-Z0-9]+$")) {
+                    word = s;
+                    setInline(sendMessage);
+                    sendMessage.setText(s.toLowerCase());
                     execute(sendMessage);
-                    break;
-                default:
-                    long start = System.currentTimeMillis();
-
-
-                    int length = Integer.parseInt(s.substring(0, 1));
-
-                    String word = s.substring(2);
-                    String result = playWordGame(word.toLowerCase(), length);
-
-                    String[] results = result.split("@");
-
-                    log.info("Размер "+Array.getLength(results));
-
-
-
-                    sendMessage.setText("I found "+ StringUtils.countMatches(result,";") + " words");
+                } else {
+                    sendMessage.setText("Sorry!I cannot understand you.For playing in Wordgame write word(max 14 letters) \n" +
+                            " For example: liberation");
                     execute(sendMessage);
-
-                    for (int i=0;i< Array.getLength(results);i++){
-                        log.info("Длина элемента "+i+" - "+results[i].length());
-                        sendMessage.setText(results[i]);
-                        execute(sendMessage);
-                    }
-
-
-                    long finish = System.currentTimeMillis();
-                    double timeConsumedMillis = finish - start;
-                    log.info("Time consumed: " + timeConsumedMillis / 1000 + " sec");
-                    sendMessage.setText("Time consumed: " + timeConsumedMillis / 1000 + " sec");
-                    execute(sendMessage);
-
-
-                    break;
+                }
+            } else {
+                sendMessage.setText("Your word is too long");
+                execute(sendMessage);
             }
             log.info(s);
         } catch (TelegramApiException e) {
@@ -141,12 +123,50 @@ public class Bot extends TelegramLongPollingBot {
     private void setInline(SendMessage sendMessage) {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(new InlineKeyboardButton().setText("Update message text").setCallbackData("16"));
+        List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
+        for (int i = 1; i < 6; i++) {
+            rowInline1.add(new InlineKeyboardButton().setText(String.valueOf(i)).setCallbackData(i + "%"));
+        }
+        List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
+        for (int i = 6; i < 11; i++) {
+            rowInline2.add(new InlineKeyboardButton().setText(String.valueOf(i)).setCallbackData(String.valueOf(i) + "%"));
+        }
         // Set the keyboard to the markup
-        rowsInline.add(rowInline);
+        rowsInline.add(rowInline1);
+        rowsInline.add(rowInline2);
         // Add it to the message
         markupInline.setKeyboard(rowsInline);
         sendMessage.setReplyMarkup(markupInline);
+    }
+
+    private void executeSearch(Long chatId, String word, int length) throws TelegramApiException {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        long start = System.currentTimeMillis();
+
+
+        String result;
+        result = playWordGame(word.toLowerCase(), length);
+
+        String[] results = result.split("@");
+
+        log.info("Размер " + Array.getLength(results));
+
+
+        sendMessage.setText("I found " + StringUtils.countMatches(result, ";") + " words");
+        execute(sendMessage);
+
+        for (int i = 0; i < Array.getLength(results); i++) {
+            log.info("Длина элемента " + i + " - " + results[i].length());
+            sendMessage.setText(results[i]);
+            execute(sendMessage);
+        }
+
+
+        long finish = System.currentTimeMillis();
+        double timeConsumedMillis = finish - start;
+        log.info("Time consumed: " + timeConsumedMillis / 1000 + " sec");
+        sendMessage.setText("Time consumed: " + timeConsumedMillis / 1000 + " sec");
+        execute(sendMessage);
     }
 }
